@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"errors"
-	"github.com/AsimovNetwork/asimov/chaincfg"
+	"github.com/AsimovNetwork/asimov/asiutil"
 	asimovCommon "github.com/AsimovNetwork/asimov/common"
 	"github.com/AsimovNetwork/asimov/crypto"
 	"github.com/AsimovNetwork/asimov/protos"
@@ -71,6 +71,8 @@ func (faucetService FaucetService) GetUTXO(address string) ([]UTXO, error) {
 
 func (faucetService FaucetService) GenerateTransaction(receiver string, amount int64, utxoSlice []UTXO, miner *asimovCommon.Address) (*protos.MsgTx, error) {
 	redeemTx := protos.NewMsgTx(protos.TxVersion)
+	redeemTx.TxContract.GasLimit = 21000
+	fee := int64(210)
 	var spendAmount int64 = 0
 	for _, v := range utxoSlice {
 		spendAmount += v.Amount
@@ -88,7 +90,7 @@ func (faucetService FaucetService) GenerateTransaction(receiver string, amount i
 				common.Logger.Errorf("pay to addr script failed. address: %s, err: %s", receiver.String(), err)
 				return nil, err
 			}
-			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, chaincfg.FlowCoinAsset)
+			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, asiutil.FlowCoinAsset)
 			redeemTx.AddTxOut(receiverTxOut)
 			break
 		} else if spendAmount > amount {
@@ -98,7 +100,7 @@ func (faucetService FaucetService) GenerateTransaction(receiver string, amount i
 				common.Logger.Errorf("pay to addr script failed. address: %s, err: %s", receiver.String(), err)
 				return nil, err
 			}
-			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, chaincfg.FlowCoinAsset)
+			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, asiutil.FlowCoinAsset)
 			redeemTx.AddTxOut(receiverTxOut)
 
 			// utxo多的钱返回给款工地址
@@ -107,7 +109,7 @@ func (faucetService FaucetService) GenerateTransaction(receiver string, amount i
 				common.Logger.Errorf("pay to addr script failed. address: %s，err: %s", miner.String(), err)
 				return nil, err
 			}
-			minneTxOut := protos.NewTxOut(spendAmount-amount, minerPkScript, chaincfg.FlowCoinAsset)
+			minneTxOut := protos.NewTxOut(spendAmount-amount-fee, minerPkScript, asiutil.FlowCoinAsset)
 			redeemTx.AddTxOut(minneTxOut)
 			break
 		}
