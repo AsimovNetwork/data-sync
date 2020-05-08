@@ -8,7 +8,7 @@ type Transaction struct {
 	ID            primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	BlockHash     string             `bson:"block_hash" json:"block_hash"`
 	Height        int64              `bson:"height" json:"height"`
-	Hex           string             `bson:"hex" json:"hex"`
+	// Hex           string             `bson:"hex" json:"hex"`
 	Hash          string             `bson:"hash" json:"hash"`
 	VtxHash       string             `bson:"vtx_hash,omitempty" json:"vtx_hash"`
 	Size          int32              `bson:"size" json:"size"`
@@ -29,10 +29,10 @@ type Fee struct {
 }
 
 type Vin struct {
-	ID     primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	TxHash string             `bson:"tx_hash" json:"tx_hash"`
-	Height int64              `bson:"height" json:"height"`
-	Time   int64              `bson:"time" json:"time"`
+	// ID     primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	// TxHash string             `bson:"tx_hash" json:"tx_hash"`
+	// Height int64              `bson:"height" json:"height"`
+	// Time   int64              `bson:"time" json:"time"`
 	// CoinBase Script
 	CoinBase  string     `bson:"coin_base,omitempty" json:"coin_base,omitempty"`
 	Sequence  uint32     `bson:"sequence,omitempty" json:"sequence,omitempty"`
@@ -55,11 +55,11 @@ type PrevOut struct {
 }
 
 type Vout struct {
-	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	TxHash       string             `bson:"tx_hash" json:"tx_hash"`
-	Height       int64              `bson:"height" json:"height"`
+	// ID           primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	// TxHash       string             `bson:"tx_hash" json:"tx_hash"`
+	// Height       int64              `bson:"height" json:"height"`
+	// Time         int64              `bson:"time" json:"time"`
 	Value        int64              `bson:"value" json:"value"`
-	Time         int64              `bson:"time" json:"time"`
 	N            uint32             `bson:"n" json:"n"`
 	ScriptPubKey ScriptPubKey       `bson:"script_pub_key" json:"script_pub_key"`
 	// Data         string             `bson:"data,omitempty" json:"data,omitempty"`
