@@ -117,6 +117,7 @@ func (transactionStatisticsService TransactionStatisticsService) InsertOrUpdate(
 				"$setOnInsert": bson.M{
 					"category":      category,
 					"tx_hash":       v.TxHash,
+					"time":          v.Time,
 					"creator":       v.Creator,
 					"template_type": v.TemplateType,
 					"template_name": v.TemplateTName,
