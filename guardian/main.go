@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/AsimovNetwork/data-sync/library/common"
-	"github.com/AsimovNetwork/data-sync/library/mongo"
 	"github.com/AsimovNetwork/data-sync/library/mongo/event"
-	"github.com/AsimovNetwork/data-sync/library/mongo/model"
 	"github.com/AsimovNetwork/data-sync/library/mongo/service"
 	"github.com/AsimovNetwork/data-sync/library/response"
 
@@ -186,20 +184,6 @@ func syncData(offset int32, count int32) (*int64, error) {
 				err := ecologyService.DropOneDayBeforeData()
 				if err != nil {
 					common.Logger.Errorf("drop trading data error in height %d,err: %s", handledHeight, err)
-				}
-				err = transactionStatisticsService.Drop(mongo.CollectionAddressTransaction, model.CountAddress)
-				if err != nil {
-					common.Logger.Errorf("drop %s data error in height %d,err: %s", mongo.CollectionAddressTransaction, handledHeight, err)
-				}
-
-				err = transactionStatisticsService.Drop(mongo.CollectionContractTransaction, model.CountContract)
-				if err != nil {
-					common.Logger.Errorf("drop %s data error in height %d, err: %s", mongo.CollectionContractTransaction, handledHeight, err)
-				}
-
-				err = transactionStatisticsService.Drop(mongo.CollectionAssetTransaction, model.CountAsset)
-				if err != nil {
-					common.Logger.Errorf("drop %s data error in height %d, err: %s", mongo.CollectionAssetTransaction, handledHeight, err)
 				}
 			}()
 		}

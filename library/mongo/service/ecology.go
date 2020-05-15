@@ -33,98 +33,6 @@ func (ecologyService EcologyService) Analyze(block rpcjson.GetBlockVerboseResult
 	return nil
 }
 
-//func recordAddress(height int64, txs []rpcjson.TxResult) error {
-//	addresses := make([]string, 0)
-//	addressTransactionSlice := make([]interface{}, 0)
-//	addressTransactionMap := make(map[string]model.TransactionList)
-//
-//	for _, tx := range txs {
-//		for _, vin := range tx.Vin {
-//			if vin.PrevOut != nil {
-//				for _, address := range vin.PrevOut.Addresses {
-//					if address[:4] == common.CitizenPrefix {
-//						exist, err := transactionStatisticsService.Exist(address)
-//						if err != nil {
-//							return err
-//						}
-//						if !exist {
-//							err = transactionStatisticsService.Insert(model.CountAddress, height, address, tx.Time, "", "", 0, "")
-//							if err != nil {
-//								return err
-//							}
-//						}
-//
-//						if _, ok := addressTransactionMap[address]; !ok {
-//							feeSlice := make([]model.Fee, 0)
-//							for _, v := range tx.Fee {
-//								tmp := model.Fee{
-//									Value: v.Value,
-//									Asset: v.Asset,
-//								}
-//								feeSlice = append(feeSlice, tmp)
-//							}
-//							addressTransactionMap[address] = model.TransactionList{
-//								Height: height,
-//								Key:    address,
-//								TxHash: tx.Hash,
-//								Time:   tx.Time,
-//								Fee:    feeSlice,
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		for _, vout := range tx.Vout {
-//			for _, address := range vout.ScriptPubKey.Addresses {
-//				if address[:4] == common.CitizenPrefix {
-//					exist, err := transactionStatisticsService.Exist(address)
-//					if err != nil {
-//						return err
-//					}
-//					if !exist {
-//						err = transactionStatisticsService.Insert(model.CountAddress, height, address, tx.Time, "", "", 0, "")
-//						if err != nil {
-//							return err
-//						}
-//					}
-//
-//					if _, ok := addressTransactionMap[address]; !ok {
-//						feeSlice := make([]model.Fee, 0)
-//						for _, v := range tx.Fee {
-//							tmp := model.Fee{
-//								Value: v.Value,
-//								Asset: v.Asset,
-//							}
-//							feeSlice = append(feeSlice, tmp)
-//						}
-//						addressTransactionMap[address] = model.TransactionList{
-//							Height: height,
-//							Key:    address,
-//							TxHash: tx.Hash,
-//							Time:   tx.Time,
-//							Fee:    feeSlice,
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//	for k, v := range addressTransactionMap {
-//		addresses = append(addresses, k)
-//		addressTransactionSlice = append(addressTransactionSlice, v)
-//	}
-//
-//	err := transactionStatisticsService.IncTxCount(addresses)
-//	if err != nil {
-//		return err
-//	}
-//
-//	return transactionStatisticsService.Record(mongo.CollectionAddressTransaction, addressTransactionSlice)
-//}
-
 func recordAddress(height int64, rawTx []rpcjson.TxResult) error {
 	addresses := make([]string, 0)
 	addressTransactionSlice := make([]interface{}, 0)
@@ -213,39 +121,6 @@ func recordAddress(height int64, rawTx []rpcjson.TxResult) error {
 	return nil
 }
 
-//func recordContract(height int64, receipts []*rpcjson.ReceiptResult, txs []rpcjson.TxResult) error {
-//	for _, receipt := range receipts {
-//		if len(receipt.ContractAddress) > 0 && receipt.ContractAddress != common.EmptyContract {
-//			exist, err := transactionStatisticsService.Exist(receipt.ContractAddress)
-//			if err != nil {
-//				return err
-//			}
-//			if !exist {
-//				var time int64
-//				var creator string
-//				for _, tx := range txs {
-//					if tx.Hash == receipt.TxHash {
-//						time = tx.Time
-//						if tx.Vin[0].PrevOut != nil {
-//							creator = tx.Vin[0].PrevOut.Addresses[0]
-//							break
-//						}
-//					}
-//				}
-//				contractTemplate, err := contractService.GetTemplate(receipt.ContractAddress)
-//				if err != nil {
-//					return err
-//				}
-//				err = transactionStatisticsService.Insert(model.CountContract, height, receipt.ContractAddress, time, receipt.TxHash, creator, contractTemplate.TemplateType, contractTemplate.TemplateTName)
-//				if err != nil {
-//					return err
-//				}
-//			}
-//		}
-//	}
-//	return nil
-//}
-
 func recordContract(height int64, receipts []*rpcjson.ReceiptResult, txs []rpcjson.TxResult) error {
 	addresses := make([]string, 0)
 	contractTransactionSlice := make([]interface{}, 0)
@@ -254,7 +129,7 @@ func recordContract(height int64, receipts []*rpcjson.ReceiptResult, txs []rpcjs
 	for _, receipt := range receipts {
 		if len(receipt.ContractAddress) > 0 && receipt.ContractAddress != common.EmptyContract {
 			var creator string
-			var time int64
+			time := int64(0)
 			for _, tx := range txs {
 				if tx.Hash == receipt.TxHash {
 					time = tx.Time
@@ -348,51 +223,6 @@ func recordContract(height int64, receipts []*rpcjson.ReceiptResult, txs []rpcjs
 	}
 	return nil
 }
-
-//func updateContract(height int64, txs []rpcjson.TxResult) error {
-//	addresses := make([]string, 0)
-//	contractTransactionSlice := make([]interface{}, 0)
-//	contractTransactionMap := make(map[string]model.TransactionList)
-//
-//	for _, tx := range txs {
-//		for _, vout := range tx.Vout {
-//			for _, address := range vout.ScriptPubKey.Addresses {
-//				if address[:4] == common.ContractPrefix {
-//					if _, ok := common.SystemContractAddressMap[address]; !ok {
-//						if _, ok := contractTransactionMap[address]; !ok {
-//							feeSlice := make([]model.Fee, 0)
-//							for _, v := range tx.Fee {
-//								tmp := model.Fee{
-//									Value: v.Value,
-//									Asset: v.Asset,
-//								}
-//								feeSlice = append(feeSlice, tmp)
-//							}
-//							contractTransactionMap[address] = model.TransactionList{
-//								Height: height,
-//								Key:    address,
-//								TxHash: tx.Hash,
-//								Time:   tx.Time,
-//								Fee:    feeSlice,
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-//	for k, v := range contractTransactionMap {
-//		addresses = append(addresses, k)
-//		contractTransactionSlice = append(contractTransactionSlice, v)
-//	}
-//
-//	err := transactionStatisticsService.IncTxCount(addresses)
-//	if err != nil {
-//		return err
-//	}
-//
-//	return transactionStatisticsService.Record(mongo.CollectionContractTransaction, contractTransactionSlice)
-//}
 
 func recordAsiTrading(height int64, txs []rpcjson.TxResult) error {
 	tradings := make([]interface{}, 0)

@@ -19,37 +19,6 @@ func (transactionStatisticsService TransactionStatisticsService) Exist(key strin
 	return exist, err
 }
 
-//func (transactionStatisticsService TransactionStatisticsService) Insert(category uint8, height int64, key string, time int64, txHash string, creator string, templateType uint16, templateName string) error {
-//	insert := model.TransactionCount{
-//		Key:      key,
-//		Height:   height,
-//		Time:     time,
-//		TxCount:  0,
-//		Category: category,
-//	}
-//	if category == model.CountContract {
-//		insert.TxHash = txHash
-//		insert.Creator = creator
-//		insert.TemplateType = templateType
-//		insert.TemplateTName = templateName
-//	}
-//
-//	_, err := mongo.MongoDB.Collection(mongo.CollectionTransactionCount).InsertOne(context.TODO(), insert)
-//	if err != nil {
-//		common.Logger.Errorf("insert contract error. err: %s", err)
-//		return err
-//	}
-//	return nil
-//}
-//
-//func (transactionStatisticsService TransactionStatisticsService) IncTxCount(keys []string) error {
-//	if len(keys) <= 0 {
-//		return nil
-//	}
-//	_, err := mongo.MongoDB.Collection(mongo.CollectionTransactionCount).UpdateMany(context.TODO(), bson.M{"key": bson.M{"$in": keys}}, bson.M{"$inc": bson.D{{"tx_count", 1}}})
-//	return err
-//}
-
 func (transactionStatisticsService TransactionStatisticsService) Record(collection string, models []interface{}) error {
 	if len(models) <= 0 {
 		return nil
