@@ -60,7 +60,7 @@ func (createAssetEvent CreateAssetEvent) handle(b blockInfo, args map[string]int
 		return createAssetEvent.checkArg("amount")
 	}
 
-	asset := protos.NewAssets(*assetType.(*uint32), *organizationId.(*uint32), *assetIndex.(*uint32))
+	asset := protos.NewAsset(*assetType.(*uint32), *organizationId.(*uint32), *assetIndex.(*uint32))
 
 	err := daoOrganizationAssetService.Insert(b.height, b.time, contractAddress.(*asimovCommon.Address).Hex(), asimovCommon.Bytes2Hex(asset.Bytes()), (*amount.(**big.Int)).Int64(), *assetType.(*uint32), *assetIndex.(*uint32))
 	if err != nil {

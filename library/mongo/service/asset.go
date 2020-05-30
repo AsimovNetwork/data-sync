@@ -90,7 +90,7 @@ func (assetService AssetService) getAssetInfo(asset string) (*model.Asset, error
 		return assetInfo, err
 	}
 	funcName := "getAssetInfoByAssetId"
-	_, orgId, coinId := protos.AssetFromBytes(asimovCommon.Hex2Bytes(asset)).AssetsFields()
+	_, orgId, coinId := protos.AssetFromBytes(asimovCommon.Hex2Bytes(asset)).AssetFields()
 	data, err := fvm.PackFunctionArgs(abi, funcName, orgId, coinId)
 	if err != nil {
 		return assetInfo, err
