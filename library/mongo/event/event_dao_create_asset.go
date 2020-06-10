@@ -84,7 +84,7 @@ func (createAssetEvent CreateAssetEvent) handle(b blockInfo, args map[string]int
 	additionalInfo["symbol"] = *symbol.(*string)
 	additionalInfo["description"] = *description.(*string)
 	jsonStr, _ := json.Marshal(additionalInfo)
-	err = daoMessageService.SaveMessage(constant.MessageCategoryIssueAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
+	err = daoMessageService.SaveMessage(b.height, constant.MessageCategoryIssueAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
 	if err != nil {
 		return err
 	}

@@ -58,7 +58,7 @@ func (createVoteContract CreateVoteContract) handle(b blockInfo, args map[string
 	additionalInfo := make(map[string]interface{})
 	additionalInfo["creator_address"] = president.(*asimovCommon.Address).Hex()
 	jsonStr, _ := json.Marshal(additionalInfo)
-	err = daoMessageService.SaveMessage(constant.MessageCategoryCreateOrg, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
+	err = daoMessageService.SaveMessage(b.height, constant.MessageCategoryCreateOrg, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
 	if err != nil {
 		return err
 	}

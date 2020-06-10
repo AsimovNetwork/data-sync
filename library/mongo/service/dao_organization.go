@@ -104,7 +104,7 @@ func (daoOrganizationService DaoOrganizationService) UpdateOrgName(height int64,
 	additionalInfo["old_org_name"] = org.OrgName
 	additionalInfo["new_org_name"] = newName
 	jsonStr, _ := json.Marshal(additionalInfo)
-	err = daoMessageService.SaveMessage(constant.MessageCategoryModifyOrgName, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress, "", string(jsonStr))
+	err = daoMessageService.SaveMessage(height, constant.MessageCategoryModifyOrgName, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress, "", string(jsonStr))
 	if err != nil {
 		return err
 	}
@@ -137,7 +137,7 @@ func (daoOrganizationService DaoOrganizationService) CloseOrg(height int64, cont
 
 	delete(ContractAddressCache, contractAddress)
 
-	err = daoMessageService.SaveMessage(constant.MessageCategoryCloseOrg, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, "", "{}")
+	err = daoMessageService.SaveMessage(height, constant.MessageCategoryCloseOrg, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, "", "{}")
 	if err != nil {
 		return err
 	}
@@ -167,12 +167,12 @@ func (daoOrganizationService DaoOrganizationService) UpdatePresident(height int6
 		return err
 	}
 
-	err = daoMessageService.SaveMessage(constant.MessageCategoryBePresident, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, newPresident, "{}")
+	err = daoMessageService.SaveMessage(height, constant.MessageCategoryBePresident, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, newPresident, "{}")
 	if err != nil {
 		return err
 	}
 
-	err = daoMessageService.SaveMessage(constant.MessageCategoryBeenRemoved, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, org.President, "{}")
+	err = daoMessageService.SaveMessage(height, constant.MessageCategoryBeenRemoved, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, org.President, "{}")
 	if err != nil {
 		return err
 	}
@@ -181,7 +181,7 @@ func (daoOrganizationService DaoOrganizationService) UpdatePresident(height int6
 	additionalInfo["old_president"] = org.President
 	additionalInfo["new_president"] = newPresident
 	jsonStr, _ := json.Marshal(additionalInfo)
-	err = daoMessageService.SaveMessage(constant.MessageCategoryChangePresident, constant.MessageTypeReadOnly, constant.MessagePositionDao, contractAddress, "", string(jsonStr))
+	err = daoMessageService.SaveMessage(height, constant.MessageCategoryChangePresident, constant.MessageTypeReadOnly, constant.MessagePositionDao, contractAddress, "", string(jsonStr))
 	if err != nil {
 		return err
 	}
@@ -190,7 +190,7 @@ func (daoOrganizationService DaoOrganizationService) UpdatePresident(height int6
 }
 
 // 遍历交易中是否有给组织打钱的交易
-func (daoOrganizationService DaoOrganizationService) ReceiveAsset(rawTx []rpcjson.TxResult, vTx []rpcjson.TxResult) error {
+func (daoOrganizationService DaoOrganizationService) ReceiveAsset(height int64, rawTx []rpcjson.TxResult, vTx []rpcjson.TxResult) error {
 	daoReceiveAssetSlice := make([]DaoReceiveAsset, 0)
 	// 正常交易
 	daoReceiveAssetSlice = daoOrganizationService.AssembleDaoReceiveAsset(rawTx, daoReceiveAssetSlice)
@@ -208,7 +208,7 @@ func (daoOrganizationService DaoOrganizationService) ReceiveAsset(rawTx []rpcjso
 			additionalInfo["amount"] = v.Amount
 			additionalInfo["sender_address"] = v.SenderAddress
 			jsonStr, _ := json.Marshal(additionalInfo)
-			err := daoMessageService.SaveMessage(constant.MessageCategoryReceiveAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, v.ContractAddress, "", string(jsonStr))
+			err := daoMessageService.SaveMessage(height, constant.MessageCategoryReceiveAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, v.ContractAddress, "", string(jsonStr))
 			if err != nil {
 				return err
 			}

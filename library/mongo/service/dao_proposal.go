@@ -74,7 +74,7 @@ func (daoProposalService DaoProposalService) Update(height int64, contractAddres
 	jsonStr, _ := json.Marshal(additionalInfo)
 
 	if status == model.ProposalStatusReject {
-		err = daoMessageService.SaveMessage(constant.MessageCategoryProposalRejected, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress, "", string(jsonStr))
+		err = daoMessageService.SaveMessage(height, constant.MessageCategoryProposalRejected, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress, "", string(jsonStr))
 		if err != nil {
 			return err
 		}

@@ -9,7 +9,7 @@ import (
 
 type DaoMessageService struct{}
 
-func (daoMessageService DaoMessageService) SaveMessage(category int, messageType int, messagePosition int, contractAddress string, receiver string, additionalInfo string) error {
+func (daoMessageService DaoMessageService) SaveMessage(height int64, category int, messageType int, messagePosition int, contractAddress string, receiver string, additionalInfo string) error {
 	now := common.NowSecond()
 	message := models.TDaoMessage{
 		Id:              mysql.GlobalIdService.NextId(),

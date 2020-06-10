@@ -41,7 +41,7 @@ func (transferSuccessEvent TransferSuccessEvent) handle(b blockInfo, args map[st
 	additionalInfo["amount"] = (*amount.(**big.Int)).Int64()
 	additionalInfo["target_address"] = receiver.(*asimovCommon.Address).Hex()
 	jsonStr, _ := json.Marshal(additionalInfo)
-	err := daoMessageService.SaveMessage(constant.MessageCategoryTransferAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
+	err := daoMessageService.SaveMessage(b.height, constant.MessageCategoryTransferAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
 	if err != nil {
 		return err
 	}

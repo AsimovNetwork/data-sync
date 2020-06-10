@@ -7,6 +7,7 @@ import (
 	"github.com/AsimovNetwork/data-sync/library/mongo"
 	"github.com/AsimovNetwork/data-sync/library/mongo/model"
 	"github.com/AsimovNetwork/data-sync/library/mysql/constant"
+	"github.com/AsimovNetwork/data-sync/library/response"
 	"gopkg.in/mgo.v2/bson"
 	"reflect"
 )
@@ -42,7 +43,7 @@ func (daoTodoListService DaoTodoListService) Insert(height int64, time int64, co
 	additionalInfo := make(map[string]interface{})
 	additionalInfo["invite_role"] = inviteRole
 	jsonStr, _ := json.Marshal(additionalInfo)
-	err = daoMessageService.SaveMessage(constant.MessageCategoryInvited, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, operator, string(jsonStr))
+	err = daoMessageService.SaveMessage(height, constant.MessageCategoryInvited, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, operator, string(jsonStr))
 	if err != nil {
 		return err
 	}
@@ -79,7 +80,7 @@ func (daoTodoListService DaoTodoListService) InsertMany(height int64, time int64
 		}
 		inserts = append(inserts, insert)
 
-		err = daoMessageService.SaveMessage(constant.MessageCategoryNewVote, constant.MessageTypeVote, constant.MessagePositionWeb, contractAddress, v.Address, string(jsonStr))
+		err = daoMessageService.SaveMessage(height, constant.MessageCategoryNewVote, constant.MessageTypeVote, constant.MessagePositionWeb, contractAddress, v.Address, string(jsonStr))
 		if err != nil {
 			return err
 		}
@@ -104,6 +105,10 @@ func (daoTodoListService DaoTodoListService) Release(height int64, contractAddre
 
 	err := mongo.FindOne(mongo.CollectionDaoTodoList, filter, &todo)
 	if err != nil {
+		if response.IsDataNotExistError(err) {
+			common.Logger.Infof("can't find one result from dao_todo_list with filter: %v", filter)
+			return nil
+		}
 		return err
 	}
 

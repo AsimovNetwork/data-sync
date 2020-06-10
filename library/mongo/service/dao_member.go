@@ -105,23 +105,23 @@ func (daoMemberService DaoMemberService) Update(height int64, contractAddress st
 	additionalInfo["target_address"] = address
 	jsonStr, _ := json.Marshal(additionalInfo)
 	if status == model.MemberStatusAgreed {
-		err = daoMessageService.SaveMessage(constant.MessageCategoryBeMember, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, address, string(jsonStr))
+		err = daoMessageService.SaveMessage(height, constant.MessageCategoryBeMember, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, address, string(jsonStr))
 		if err != nil {
 			return err
 		}
 
-		err = daoMessageService.SaveMessage(constant.MessageCategoryAddNewMember, constant.MessageTypeReadOnly, constant.MessagePositionDao, contractAddress, "", string(jsonStr))
+		err = daoMessageService.SaveMessage(height, constant.MessageCategoryAddNewMember, constant.MessageTypeReadOnly, constant.MessagePositionDao, contractAddress, "", string(jsonStr))
 		if err != nil {
 			return err
 		}
 
 	} else if status == model.MemberStatusRemoved {
-		err = daoMessageService.SaveMessage(constant.MessageCategoryBeenRemoved, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, address, string(jsonStr))
+		err = daoMessageService.SaveMessage(height, constant.MessageCategoryBeenRemoved, constant.MessageTypeReadOnly, constant.MessagePositionWeb, contractAddress, address, string(jsonStr))
 		if err != nil {
 			return err
 		}
 
-		err = daoMessageService.SaveMessage(constant.MessageCategoryRemoveMember, constant.MessageTypeReadOnly, constant.MessagePositionDao, contractAddress, "", string(jsonStr))
+		err = daoMessageService.SaveMessage(height, constant.MessageCategoryRemoveMember, constant.MessageTypeReadOnly, constant.MessagePositionDao, contractAddress, "", string(jsonStr))
 		if err != nil {
 			return err
 		}

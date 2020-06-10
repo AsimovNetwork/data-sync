@@ -219,7 +219,7 @@ func syncData(offset int32, count int32) (*int64, error) {
 		chainNodeService.Insert(blocks[i].Height)
 
 		// 9. Monitor transfer transaction of dao organization received
-		err = daoOrganizationService.ReceiveAsset(blocks[i].RawTx, blocks[i].Vtxs)
+		err = daoOrganizationService.ReceiveAsset(blocks[i].Height, blocks[i].RawTx, blocks[i].Vtxs)
 		if err != nil {
 			return &handledHeight, err
 		}

@@ -45,7 +45,7 @@ func (mintAssetEvent MintAssetEvent) handle(b blockInfo, args map[string]interfa
 	additionalInfo["amount_or_voucher_id"] = (*amountOrVoucherId.(**big.Int)).Int64()
 
 	jsonStr, _ := json.Marshal(additionalInfo)
-	err = daoMessageService.SaveMessage(constant.MessageCategoryMintAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
+	err = daoMessageService.SaveMessage(b.height, constant.MessageCategoryMintAsset, constant.MessageTypeReadOnly, constant.MessagePositionBoth, contractAddress.(*asimovCommon.Address).Hex(), "", string(jsonStr))
 	if err != nil {
 		return err
 	}

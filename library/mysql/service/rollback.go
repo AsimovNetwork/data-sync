@@ -69,6 +69,12 @@ func (rollbackService RollbackService) Rollback(height int64) error {
 		err = session.Rollback()
 		return err
 	}
+	// delete from t_dao_message
+	err = dropMessage(session, height)
+	if err != nil {
+		err = session.Rollback()
+		return err
+	}
 
 	return session.Commit()
 }
@@ -101,6 +107,11 @@ func modifyRecord(session *xorm.Session, rollback models.TRollback) error {
 
 func drop(session *xorm.Session, height int64) error {
 	_, err := session.Exec("delete from t_rollback where height > ?", height)
+	return err
+}
+
+func dropMessage(session *xorm.Session, height int64) error {
+	_, err := session.Exec("delete from t_dao_message where height > ?", height)
 	return err
 }
 
