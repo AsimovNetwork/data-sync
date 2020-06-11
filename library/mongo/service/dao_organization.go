@@ -9,6 +9,7 @@ import (
 	"github.com/AsimovNetwork/data-sync/library/mongo/model"
 	"github.com/AsimovNetwork/data-sync/library/mysql/constant"
 	"github.com/AsimovNetwork/data-sync/library/mysql/service"
+	"github.com/AsimovNetwork/data-sync/library/response"
 	"gopkg.in/mgo.v2/bson"
 	"reflect"
 	"strings"
@@ -120,6 +121,9 @@ func (daoOrganizationService DaoOrganizationService) CloseOrg(height int64, cont
 	}
 	err := mongo.FindOne(mongo.CollectionDaoOrganization, filter, &org)
 	if err != nil {
+		if response.IsDataNotExistError(err) {
+			return nil
+		}
 		return err
 	}
 

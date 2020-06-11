@@ -20,18 +20,8 @@ func (closeOrganizationEvent CloseOrganizationEvent) handle(b blockInfo, args ma
 	if !ok {
 		return closeOrganizationEvent.checkArg("contractAddress")
 	}
-
-	contractTemplate, err := mongodb.ContractService{}.GetTemplate(contractAddress.(*asimovCommon.Address).Hex())
-	if err != nil {
-		return err
-	}
-
-	if int(contractTemplate.TemplateType) != common.Category || contractTemplate.TemplateTName != common.TemplateDAO {
-		return nil
-	}
-
 	// update dao_organization of mongodb
-	err = daoOrganizationService.CloseOrg(b.height, contractAddress.(*asimovCommon.Address).Hex())
+	err := daoOrganizationService.CloseOrg(b.height, contractAddress.(*asimovCommon.Address).Hex())
 	if err != nil {
 		return err
 	}

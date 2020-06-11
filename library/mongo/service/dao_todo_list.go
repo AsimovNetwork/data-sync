@@ -106,7 +106,6 @@ func (daoTodoListService DaoTodoListService) Release(height int64, contractAddre
 	err := mongo.FindOne(mongo.CollectionDaoTodoList, filter, &todo)
 	if err != nil {
 		if response.IsDataNotExistError(err) {
-			common.Logger.Infof("can't find one result from dao_todo_list with filter: %v", filter)
 			return nil
 		}
 		return err
