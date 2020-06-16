@@ -58,8 +58,8 @@ func main() {
 				var currentHandleHeight int64
 				// If data is nil, get current synchronized block height
 				if data == nil {
-					common.Logger.Info("already newest, sleep 10 seconds")
-					time.Sleep(time.Duration(10) * time.Second)
+					common.Logger.Info("already newest, sleep 5 seconds")
+					time.Sleep(time.Duration(5) * time.Second)
 
 					handledHeight, err := blockService.GetHandledBlockHeight()
 					if err != nil {
@@ -156,9 +156,15 @@ func main() {
 
 func syncData(offset int32, count int32) (*int64, error) {
 	var handledHeight = int64(offset)
-
 	blocks, err := blockService.FetchBlocks(offset, count)
 	if err != nil {
+		if response.IsCallBlockChainError(err) {
+			var currentHeight = int64(offset - 1)
+			common.SendDingTalk(fmt.Sprintf("sync height %d failed, err: %v", handledHeight, err))
+			common.Logger.Errorf("sync height %d failed, err: %v", handledHeight, err)
+			time.Sleep(time.Duration(5) * time.Second)
+			return &currentHeight, nil
+		}
 		return &handledHeight, err
 	}
 	// var handledHeight *int64 = nil

@@ -8,6 +8,7 @@ import (
 	"github.com/AsimovNetwork/data-sync/library/common"
 	"github.com/AsimovNetwork/data-sync/library/mongo"
 	"github.com/AsimovNetwork/data-sync/library/mongo/model"
+	"github.com/AsimovNetwork/data-sync/library/response"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -37,7 +38,7 @@ func (blockService BlockService) FetchBlocks(offset int32, count int32) ([]rpcjs
 	param := common.NewChainRequest("getBlockListByHeight", []interface{}{offset, count})
 	result, ok := common.Post(common.Cfg.BlockChainRpc, param)
 	if !ok {
-		return nil, errors.New("call block chain failed")
+		return nil, response.NewCallBlockChainError()
 	}
 	mapSlice := (result).([]interface{})
 	blockSlice := make([]rpcjson.GetBlockVerboseResult, 0)

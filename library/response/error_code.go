@@ -1,10 +1,11 @@
 package response
 
 const (
-	SystemError     = 1001
-	BadArguments    = 1002
-	NotEnoughAmount = 1003
-	DataNotExist    = 1004
+	SystemError          = 1001
+	BadArguments         = 1002
+	NotEnoughAmount      = 1003
+	DataNotExist         = 1004
+	CallBlockChainFailed = 1005
 
 	NoAccountFound         = 2001
 	PublicKeyNotMatch      = 2002
@@ -76,4 +77,5 @@ var errorInfo = map[uint16]string{
 	MemberNotEnoughError:              "foundation member is not enough",
 	VoteTooManyChairmanError:          "can't vote for more than one chairman",
 	VoteTooManyPermanentDirectorError: "can't vote for more than five permanent directors",
+	CallBlockChainFailed:              "call block chain failed",
 }
