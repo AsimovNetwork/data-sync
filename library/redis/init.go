@@ -30,6 +30,11 @@ func init() {
 			if err != nil {
 				return nil, err
 			}
+
+			if _, err := c.Do("AUTH", "bl2a0D9Wy6gP1KUaU-a7"); err != nil {
+				c.Close()
+				return nil, err
+			}
 			return c, nil
 		},
 	}

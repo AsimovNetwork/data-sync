@@ -90,7 +90,7 @@ func (faucetService FaucetService) GenerateTransaction(receiver string, amount i
 				common.Logger.Errorf("pay to addr script failed. address: %s, err: %s", receiver.String(), err)
 				return nil, err
 			}
-			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, asiutil.FlowCoinAsset)
+			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, asiutil.AsimovAsset)
 			redeemTx.AddTxOut(receiverTxOut)
 			break
 		} else if spendAmount > amount {
@@ -100,7 +100,7 @@ func (faucetService FaucetService) GenerateTransaction(receiver string, amount i
 				common.Logger.Errorf("pay to addr script failed. address: %s, err: %s", receiver.String(), err)
 				return nil, err
 			}
-			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, asiutil.FlowCoinAsset)
+			receiverTxOut := protos.NewTxOut(amount, receiverPkScript, asiutil.AsimovAsset)
 			redeemTx.AddTxOut(receiverTxOut)
 
 			// utxo多的钱返回给款工地址
@@ -109,7 +109,7 @@ func (faucetService FaucetService) GenerateTransaction(receiver string, amount i
 				common.Logger.Errorf("pay to addr script failed. address: %s，err: %s", miner.String(), err)
 				return nil, err
 			}
-			minneTxOut := protos.NewTxOut(spendAmount-amount-fee, minerPkScript, asiutil.FlowCoinAsset)
+			minneTxOut := protos.NewTxOut(spendAmount-amount-fee, minerPkScript, asiutil.AsimovAsset)
 			redeemTx.AddTxOut(minneTxOut)
 			break
 		}

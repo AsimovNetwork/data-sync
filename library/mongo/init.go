@@ -100,7 +100,9 @@ func init() {
 	// CollectionTrading Index
 
 	//  cannot create unique index over { hash: 1 } with shard key pattern { height: "hashed" }
-	ensureIndex(CollectionTransaction, bsonx.Doc{{Key: "hash", Value: bsonx.Int32(1)}}, false)
+	ensureIndex(CollectionTransaction, bsonx.Doc{{Key: "hash", Value: bsonx.Int32(1)}}, true)
+	// cluster mod
+	// ensureIndex(CollectionTransaction, bsonx.Doc{{Key: "hash", Value: bsonx.Int32(1)}}, false)
 	// CollectionTransaction Index
 
 	// Collection Asset Index
